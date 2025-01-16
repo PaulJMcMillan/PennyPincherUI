@@ -94,7 +94,6 @@ else if (entities != null && entities.Any())
                 <td>@(entity.Active ? "Yes" : "No")</td>
                 <td>@entity.Notes</td>
                 <td>@entity.LowestBalance</td>
-                @* <td>@entity.DefaultEntity</td> *@
                 <td>@(entity.DefaultEntity ? "Yes" : "No")</td>
                 <td>
                     <a href="javascript:void(0)" @onclick="() => EditEntity(entity.Id)" class="button-link">Edit</a>
