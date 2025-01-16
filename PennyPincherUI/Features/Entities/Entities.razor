@@ -1,0 +1,153 @@
+﻿@page "/entities"
+@using PennyPincherWebApi.Features.Entity
+@inject HttpClient Http
+
+<h3>Entities</h3>
+
+<style>
+        .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 12px;
+        text-align: left;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-table th, .custom-table td {
+        padding: 6px 7px;
+        border: 1px solid #ddd;
+    }
+
+    .custom-table th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    .custom-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .custom-table .amount.negative {
+        color: red;
+    }
+
+    .custom-table .amount.positive {
+        color: green;
+    }
+
+    .action-btn {
+        padding: 3px 6px;
+        margin-right: 2px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .action-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .button-link {
+        display: inline-block;
+        padding: 1px 1px 1px 1px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        margin: 1px 1px 1px 1px;
+    }
+    .button-link:hover {
+       background-color: #0056b3;
+    }
+</style>
+
+@if (isLoading)
+{
+    <p>Loading entities...</p>
+}
+else if (entities != null && entities.Any())
+{
+    <a href="javascript:void(0)" @onclick="() => CreateEntity()" class="button-link">Create</a>
+
+    <table class="custom-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Active</th>
+            <th>Notes</th>
+            <th>Lowest Balance</th>
+            <th>Default Entity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entity in entities)
+        {
+            <tr>
+                <td>@entity.Name</td>
+                <td>@(entity.Active ? "Yes" : "No")</td>
+                <td>@entity.Notes</td>
+                <td>@entity.LowestBalance</td>
+                @* <td>@entity.DefaultEntity</td> *@
+                <td>@(entity.DefaultEntity ? "Yes" : "No")</td>
+                <td>
+                    <a href="javascript:void(0)" @onclick="() => EditEntity(entity.Id)" class="button-link">Edit</a>
+                    <a href="javascript:void(0)" @onclick="() => DeleteEntity(entity.Id)" class="button-link">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+else
+{
+    <p>No entities found.</p>
+}
+
+
+
+
+
+@code {
+    private List<Entity> entities;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Simulate async operation
+            entities = await Http.GetFromJsonAsync<List<Entity>>("https://localhost:7178/api/Entity/GetAllEntitiesByCustomerId/1");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions (e.g., log or show an error message)
+            Console.WriteLine($"Error fetching entities: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false; // Data has finished loading
+        }
+    }
+
+    private void CreateEntity()
+    {
+
+    }
+
+    private void EditEntity(int id)
+    {
+    }
+
+    private async Task DeleteEntity(int id)
+    {
+        // await Http.DeleteAsync($"api/products/{id}");
+        // entities = await Http.GetFromJsonAsync<List<Entity>>("api/entities"); // Refresh list
+    }
+}
