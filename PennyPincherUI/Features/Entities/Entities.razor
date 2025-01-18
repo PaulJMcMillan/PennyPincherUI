@@ -1,6 +1,8 @@
 ﻿@page "/entities"
-@using PennyPincherWebApi.Features.Entity
+@using PennyPincherModels
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
+
 
 <h3>Entities</h3>
 
@@ -109,10 +111,6 @@ else
     <p>No entities found.</p>
 }
 
-
-
-
-
 @code {
     private List<Entity> entities;
     private bool isLoading = true;
@@ -121,7 +119,6 @@ else
     {
         try
         {
-            // Simulate async operation
             entities = await Http.GetFromJsonAsync<List<Entity>>("https://localhost:7178/api/Entity/GetAllEntitiesByCustomerId/1");
         }
         catch (Exception ex)
@@ -137,16 +134,16 @@ else
 
     private void CreateEntity()
     {
-
+        NavigationManager.NavigateTo("/create-entity");
     }
 
     private void EditEntity(int id)
     {
+        NavigationManager.NavigateTo($"/edit-entity/{id}");
     }
 
-    private async Task DeleteEntity(int id)
+    private void DeleteEntity(int id)
     {
-        // await Http.DeleteAsync($"api/products/{id}");
-        // entities = await Http.GetFromJsonAsync<List<Entity>>("api/entities"); // Refresh list
+        NavigationManager.NavigateTo($"/delete-entity/{id}");
     }
 }

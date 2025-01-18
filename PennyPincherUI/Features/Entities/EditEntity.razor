@@ -1,0 +1,68 @@
+﻿@page "/edit-entity/{id:int}"
+@using PennyPincherModels
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Edit Entity</h3>
+
+@if (entity == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@entity" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="entity.Name" />
+        </div>
+        <div>
+            <label for="active">Active:</label>
+            <InputCheckbox id="active" @bind-Value="entity.Active" />
+        </div>
+        <div>
+            <label for="notes">Notes:</label>
+            <InputTextArea id="notes" class="form-control" @bind-Value="entity.Notes" />
+        </div>
+        <div>
+            <label for="lowestBalance">Lowest Balance:</label>
+            <InputNumber id="lowestBalance" class="form-control" @bind-Value="entity.LowestBalance" />
+        </div>
+        <div>
+            <label for="defaultEntity">Default Entity:</label>
+            <InputCheckbox id="defaultEntity" @bind-Value="entity.DefaultEntity" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Entity? entity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        entity = await Http.GetFromJsonAsync<Entity>($"https://localhost:7178/api/Entity/{Id}");
+    }
+
+    private async Task HandleSubmit()
+    {
+        var response = await Http.PutAsJsonAsync<Entity>("https://localhost:7178/api/Entity", entity);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/entities");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create product."); //todo:
+        }
+    }
+}
+
