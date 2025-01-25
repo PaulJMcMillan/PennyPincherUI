@@ -1,0 +1,63 @@
+﻿@page "/edit-account/{id:int}"
+@using PennyPincherModels
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Edit Account</h3>
+
+@if (account == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@account" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="account.Name" />
+        </div>
+        <div>
+            <label for="active">Active:</label>
+            <InputCheckbox id="active" @bind-Value="account.Active" />
+        </div>
+        <div>
+            <label for="notes">Notes:</label>
+            <InputTextArea id="notes" class="form-control" @bind-Value="account.Notes" />
+        </div>
+        <div>
+            <label for="cashFlowForecast">Cash Flow Forecast:</label>
+            <InputCheckbox id="cashFlowForecast" @bind-Value="account.CashFlowForecast" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Account? account;
+
+    protected override async Task OnInitializedAsync()
+    {
+        account = await Http.GetFromJsonAsync<Account>($"https://localhost:7178/api/Account/{Id}");
+    }
+
+    private async Task HandleSubmit()
+    {
+        var response = await Http.PutAsJsonAsync<Account>("https://localhost:7178/api/Account", account);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/accounts");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create."); //todo:
+        }
+    }
+}
+

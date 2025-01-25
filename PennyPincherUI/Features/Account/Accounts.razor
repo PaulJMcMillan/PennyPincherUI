@@ -1,0 +1,147 @@
+﻿@page "/accounts"
+@using PennyPincherModels
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Accounts</h3>
+
+<style>
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 12px;
+        text-align: left;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+        .custom-table th, .custom-table td {
+            padding: 6px 7px;
+            border: 1px solid #ddd;
+        }
+
+        .custom-table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .custom-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .custom-table .amount.negative {
+            color: red;
+        }
+
+        .custom-table .amount.positive {
+            color: green;
+        }
+
+    .action-btn {
+        padding: 3px 6px;
+        margin-right: 2px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .button-link {
+        display: inline-block;
+        padding: 1px 1px 1px 1px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        margin: 1px 1px 1px 1px;
+    }
+
+        .button-link:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+@if (isLoading)
+{
+    <p>Loading Accounts...</p>
+}
+else if (accounts != null && accounts.Any())
+{
+    <a href="javascript:void(0)" @onclick="() => CreateAccount()" class="button-link">Create</a>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Active</th>
+                <th>Notes</th>
+                <th>Cash Flow Forecast</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in accounts)
+            {
+                <tr>
+                    <td>@account.Name</td>
+                    <td>@(account.Active ? "Yes" : "No")</td>
+                    <td>@account.Notes</td>
+                    <td>@account.CashFlowForecast</td>
+                    <td>
+                        <a href="javascript:void(0)" @onclick="() => EditAccount(account.Id)" class="button-link">Edit</a>
+                        <a href="javascript:void(0)" @onclick="() => DeleteAccount(account.Id)" class="button-link">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No Accounts found.</p>
+}
+
+@code {
+    private List<Account> accounts;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            accounts = await Http.GetFromJsonAsync<List<Account>>("https://localhost:7178/api/Account/GetAllAccountsByEntityId/1");
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions (e.g., log or show an error message)
+            Console.WriteLine($"Error fetching Accounts: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false; // Data has finished loading
+        }
+    }
+
+    private void CreateAccount()
+    {
+        NavigationManager.NavigateTo("/create-account");
+    }
+
+    private void EditAccount(int id)
+    {
+        NavigationManager.NavigateTo($"/edit-account/{id}");
+    }
+
+    private void DeleteAccount(int id)
+    {
+        NavigationManager.NavigateTo($"/delete-account/{id}");
+    }
+}
