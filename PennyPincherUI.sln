@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PennyPincherUI", "PennyPincherUI\PennyPincherUI.csproj", "{C1DA662D-C7BC-48AE-A123-4BCF54CC2739}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PennyPincherModels", "..\PennyPincherModels\PennyPincherModels\PennyPincherModels.csproj", "{A788C944-597D-475A-A242-5E19C2D93A5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PennyPincherShared", "..\PennyPincherSharedLib\PennyPincherSharedLib\PennyPincherShared.csproj", "{5793B623-A9A9-44E8-8706-9474D07E4EFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{C1DA662D-C7BC-48AE-A123-4BCF54CC2739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1DA662D-C7BC-48AE-A123-4BCF54CC2739}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1DA662D-C7BC-48AE-A123-4BCF54CC2739}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A788C944-597D-475A-A242-5E19C2D93A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A788C944-597D-475A-A242-5E19C2D93A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A788C944-597D-475A-A242-5E19C2D93A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A788C944-597D-475A-A242-5E19C2D93A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5793B623-A9A9-44E8-8706-9474D07E4EFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5793B623-A9A9-44E8-8706-9474D07E4EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5793B623-A9A9-44E8-8706-9474D07E4EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5793B623-A9A9-44E8-8706-9474D07E4EFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

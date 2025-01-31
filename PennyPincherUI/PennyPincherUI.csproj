@@ -19,12 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PennyPincherModels\PennyPincherModels\PennyPincherModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\..\PennyPincherSharedLib\PennyPincherSharedLib\PennyPincherShared.csproj" />
   </ItemGroup>
 
 </Project>

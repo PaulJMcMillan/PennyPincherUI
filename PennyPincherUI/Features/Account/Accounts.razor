@@ -1,5 +1,5 @@
 ﻿@page "/accounts"
-@using PennyPincherModels
+@using PennyPincherShared.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -110,14 +110,14 @@ else
 }
 
 @code {
-    private List<Account> accounts;
+    private List<PennyPincherShared.Models.Account> accounts;
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            accounts = await Http.GetFromJsonAsync<List<Account>>("https://localhost:7178/api/Account/GetAllAccountsByEntityId/1");
+            accounts = await Http.GetFromJsonAsync<List<PennyPincherShared.Models.Account>>("https://localhost:7178/api/Account/GetAllAccountsByEntityId/1");
         }
         catch (Exception ex)
         {

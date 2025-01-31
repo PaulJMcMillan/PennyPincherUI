@@ -1,5 +1,4 @@
 ﻿@page "/edit-account/{id:int}"
-@using PennyPincherModels
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -39,16 +38,16 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    private Account? account;
+    private PennyPincherShared.Models.Account? account;
 
     protected override async Task OnInitializedAsync()
     {
-        account = await Http.GetFromJsonAsync<Account>($"https://localhost:7178/api/Account/{Id}");
+        account = await Http.GetFromJsonAsync<PennyPincherShared.Models.Account>($"https://localhost:7178/api/Account/{Id}");
     }
 
     private async Task HandleSubmit()
     {
-        var response = await Http.PutAsJsonAsync<Account>("https://localhost:7178/api/Account", account);
+        var response = await Http.PutAsJsonAsync<PennyPincherShared.Models.Account>("https://localhost:7178/api/Account", account);
 
         if (response.IsSuccessStatusCode)
         {
