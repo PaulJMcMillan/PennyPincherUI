@@ -22,4 +22,10 @@
     <ProjectReference Include="..\..\PennyPincherSharedLib\PennyPincherSharedLib\PennyPincherShared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Features\Budget\CreateBudget.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

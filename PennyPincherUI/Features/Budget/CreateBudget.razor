@@ -1,0 +1,89 @@
+﻿@page "/create-budget"
+@using PennyPincherShared.Enums
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Create Budget</h3>
+
+<EditForm Model="@budget" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="budget.Name" />
+    </div>
+    <div>
+        <label for="amount">Amount:</label>
+        <InputNumber id="amount" class="form-control" @bind-Value="amount" />
+    </div>
+    <div>
+        <label for="frequencyId">Frequency:</label>
+        <select @bind="selectedFreq" class="form-control" >
+            @foreach(var freq in Enum.GetValues(typeof(FrequencyEnum)))
+            {
+                <option value="@freq">@freq</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label for="dueDate">Due Date:</label>
+        <InputDate @bind-Value="dueDate" class="form-control" />
+    </div>
+    <div>
+        <label for="payDate">Pay Date:</label>
+        <InputDate @bind-Value="payDate" class="form-control" />
+    </div>
+    <div>
+        <label for="startDate">Start Date:</label>
+        <InputDate @bind-Value="startDate" class="form-control" />
+    </div>
+    <div>
+        <label for="endDate">End Date:</label>
+        <InputDate @bind-Value="endDate" class="form-control" />
+    </div>
+    <div>
+        <label for="paymentCount">Number of Payments</label>
+        <InputNumber @bind-Value="paymentCount" class="form-control" />
+    </div>
+    <div>
+        <label for="notes">Notes:</label>
+        <InputTextArea @bind-Value="budget.Notes" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private PennyPincherShared.Models.Budget budget = new();
+    private FrequencyEnum? selectedFreq = null;
+    private DateTime? dueDate = null;
+    private DateTime? payDate = null;
+    private DateTime? startDate = null; 
+    private DateTime? endDate = null;
+    private int? paymentCount = null;
+    private string notes = string.Empty;
+    private decimal? amount = null;
+
+    private async Task HandleSubmit()
+    {
+        budget.EntityId=1; //todo
+        budget.FrequencyId = (int)selectedFreq;
+        budget.Amount = (decimal)amount;
+        budget.DueDate = (DateTime)dueDate;
+        budget.PayDate= (DateTime)payDate;
+        budget.StartDate = startDate ?? new DateTime(1900, 1, 1);
+        budget.EndDate = endDate ?? new DateTime(1900, 1, 1);
+        budget.NumberOfPayments = paymentCount ?? 0;
+
+        var response = await Http.PostAsJsonAsync("https://localhost:7178/api/Budget/", budget);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/budgets");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create."); //todo:
+        }
+    }
+}
