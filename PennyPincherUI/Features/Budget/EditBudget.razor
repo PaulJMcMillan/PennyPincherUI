@@ -1,0 +1,97 @@
+﻿@page "/edit-budget/{id:int}"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@using PennyPincherShared.Enums
+
+<h3>Edit Budget</h3>
+
+@if (budget == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@budget" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="budget.Name" />
+        </div>
+        <div>
+            <label for="amount">Amount:</label>
+            <InputNumber id="amount" class="form-control" @bind-Value="budget.Amount" />
+        </div>
+        <div>
+            <label for="frequencyId">Frequency:</label>
+            <select @bind="selectedFreq" class="form-control">
+                @foreach (var freq in Enum.GetValues(typeof(FrequencyEnum)))
+                {
+                    <option value="@freq">@freq</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label for="dueDate">Due Date:</label>
+            <InputDate @bind-Value="budget.DueDate" class="form-control" />
+        </div>
+        <div>
+            <label for="payDate">Pay Date:</label>
+            <InputDate @bind-Value="budget.PayDate" class="form-control" />
+        </div>
+        <div>
+            <label for="startDate">Start Date:</label>
+            <InputDate @bind-Value="budget.StartDate" class="form-control" />
+        </div>
+        <div>
+            <label for="endDate">End Date:</label>
+            <InputDate @bind-Value="budget.EndDate" class="form-control" />
+        </div>
+        <div>
+            <label for="paymentCount">Number of Payments</label>
+            <InputNumber @bind-Value="budget.NumberOfPayments" class="form-control" />
+        </div>
+        <div>
+            <label for="notes">Notes:</label>
+            <InputTextArea @bind-Value="budget.Notes" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private PennyPincherShared.Models.Budget? budget;
+    private FrequencyEnum selectedFreq = FrequencyEnum.Monthly;
+    private DateTime? dueDate = null;
+    private DateTime? payDate = null;
+    private DateTime? startDate = null;
+    private DateTime? endDate = null;
+    private int? paymentCount = null;
+    private string notes = string.Empty;
+    private decimal? amount = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        budget = await Http.GetFromJsonAsync<PennyPincherShared.Models.Budget>($"https://localhost:7178/api/budget/{Id}");
+        selectedFreq = (FrequencyEnum)budget.FrequencyId;
+    }
+
+    private async Task HandleSubmit()
+    {
+        budget.FrequencyId = (int)selectedFreq;
+        var response = await Http.PutAsJsonAsync<PennyPincherShared.Models.Budget>("https://localhost:7178/api/budget", budget);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/budgets");
+        }
+        else
+        {
+            Console.WriteLine("Failed to create."); //todo:
+        }
+    }
+}
+
